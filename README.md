@@ -10,7 +10,6 @@ install `external_control` URCap
 
 install `rs485` URCap (and remove \*Gripper\* Cap if present or it will overide rs485 user com)
 
-## After each robot power on
 
 On Communication Interface (UR Tablet), go on Installation -> General -> Tool I/O 
 and select Controlled by "User" with the following settings :
@@ -21,15 +20,56 @@ and select Controlled by "User" with the following settings :
 - TX Idle Chars : 3.5
 - Tool Output Voltage : 24V  
 
-roslaunch ur_robot_driver ur5e_bringup.launch robot_ip:=192.168.1.210 use_tool_communication:=true tool_voltage:=24 tool_parity:=0 tool_baud_rate:=115200 tool_stop_bits:=1 tool_rx_idle_chars:=1.5 tool_tx_idle_chars:=3.5 tool_device_name:=/tmp/ttyUR
+- In "Installation", click on "External Control" and set the IP address of the computer connected to the arm controller
+
+## After each robot power on
+
+### Connection
+
+- Communication avec le controlleur du bras
+    ```bash
+    # Changer IP si besoin
+    roslaunch ur_robot_driver ur5e_bringup.launch robot_ip:=192.168.1.210 use_tool_communication:=true tool_voltage:=24 tool_parity:=0 tool_baud_rate:=115200 tool_stop_bits:=1 tool_rx_idle_chars:=1.5 tool_tx_idle_chars:=3.5 tool_device_name:=/tmp/ttyUR
+    ```
 
 - Communication Interface (UR Tablet), click below on "Play" and execute the external_control program
 
-rosrun robotiq_2f_gripper_control Robotiq2FGripperRtuNode.py /tmp/ttyUR
+### Gripper
 
+- Run Gripper controller
+    ```bash
+    rosrun robotiq_2f_gripper_control Robotiq2FGripperRtuNode.py /tmp/ttyUR
+    ```
 
-rosrun robotiq_2f_gripper_control Robotiq2FGripperSimpleController.py 
+- Run Gripper action controller
+    ```bash
+    roslaunch robotiq_2f_gripper_action_server robotiq_2f_gripper_action_server.launch
+    ```
 
+- Run Gripper action client 
+    ```bash
+    # OPTIONAL (if you move gripper with a terminal)
+    rosrun robotiq_2f_gripper_control Robotiq2FGripperSimpleController.py 
+    # To Open/Close the gripper, first do Reset and Activate
+    ```    
+
+### MoveIt!
+
+- Run Gripper controller
+    ```bash
+    roslaunch lyontech_ur5e_rq85_moveit move_group.launch sim:=false
+    ```
+
+- Joint State Publisher
+    ```bash
+    rosrun lyontech_ur5e_rq85_moveit gripper_joint_state_publisher.py
+    ```
+
+# Warning
+
+Premier terminal : Joint state with name: "robotiq_85_left_knuckle_joint" was received but not found in URDF
+
+# To sort ....
 
 
 top
@@ -55,6 +95,4 @@ position: [1.3934114615069788, -1.2207154792598267, -4.835902039204733, -0.46023
 
 
 
-# Warning
 
-Premier terminal : Joint state with name: "robotiq_85_left_knuckle_joint" was received but not found in URDF
