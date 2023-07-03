@@ -16,6 +16,9 @@ from std_msgs.msg import String
 import tf
 from geometry_msgs.msg import Pose, Point, Quaternion
 from moveit_commander.conversions import pose_to_list
+
+from Arm_Env import MoveGroup_Palbator_UR5e_Env
+
 ## END_SUB_TUTORIAL
 
 def all_close(goal, actual, tolerance):
@@ -114,7 +117,7 @@ class MoveGroup_Palbator_UR5e(object):
 
     joint_goal = group.get_current_joint_values()
     print(type(joint_goal), joint_goal)
-
+    """
     # joint goal is a list of 7 elements : (x,y,z,qx,qy,qz,qw) can be composed of pose_msg
     joint_goal[0] = 0
     joint_goal[1] = -pi * 0.5
@@ -126,7 +129,7 @@ class MoveGroup_Palbator_UR5e(object):
     # The go command can be called with joint values, poses, or without any
     # parameters if you have already set the pose or joint target for the group
     group.go(joint_goal, wait=True)
-
+    """
     # Calling ``stop()`` ensures that there is no residual movement
     group.stop()
 
@@ -303,6 +306,28 @@ class MoveGroup_Palbator_UR5e(object):
     return False
     ## END_SUB_TUTORIAL
 
+
+  def add_palbator_scene(self):
+
+    scene = self.scene
+    env = MoveGroup_Palbator_UR5e_Env()   
+
+    scene.add_box( *env.getBackScene() )
+    self.wait_for_state_update(box_is_known=True, timeout=4)     
+    print("\n---------- ADD BACK ----------\n\n")
+    
+    scene.add_box( *env.getTopScene() )
+    self.wait_for_state_update(box_is_known=True, timeout=4)   
+    print("\n---------- ADD TOP ----------\n\n")
+
+    scene.add_cylinder( *env.getBaseScene() )
+    self.wait_for_state_update(box_is_known=True, timeout=4)           
+    print("\n---------- ADD BASE ----------\n\n")
+
+    scene.add_box( *env.getEquipScene() )
+    self.wait_for_state_update(box_is_known=True, timeout=4)           
+    print("\n---------- ADD EQUIP ----------\n\n")
+
   def add_box(self, timeout=4):
     # Copy class variables to local variables to make the web tutorials more clear.
     # In practice, you should use the class variables directly unless you have a good
@@ -418,11 +443,11 @@ class MoveGroup_Palbator_UR5e(object):
     # We wait for the planning scene to update.
     return self.wait_for_state_update(box_is_known=True, box_is_attached=False, timeout=timeout)
 
-  def remove_box(self, timeout=4):
+  def remove_box(self, box_name, timeout=4):
     # Copy class variables to local variables to make the web tutorials more clear.
     # In practice, you should use the class variables directly unless you have a good
     # reason not to.
-    box_name = self.box_name
+    
     scene = self.scene
 
     ## BEGIN_SUB_TUTORIAL remove_object
@@ -432,11 +457,13 @@ class MoveGroup_Palbator_UR5e(object):
     ## We can remove the box from the world.
     scene.remove_world_object(box_name)
 
+    print("\n------- Remove {0} -------".format(box_name))
+
     ## **Note:** The object must be detached before we can remove it from the world
     ## END_SUB_TUTORIAL
 
     # We wait for the planning scene to update.
-    return self.wait_for_state_update(box_is_attached=False, box_is_known=False, timeout=timeout)
+    return self.wait_for_state_update(box_is_attached=False, box_is_known=True, timeout=timeout)
 
 
 def main():

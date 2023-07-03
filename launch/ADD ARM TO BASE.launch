@@ -1,0 +1,6 @@
+<launch>
+
+  <!-- Load universal robot description format (URDF) -->
+  <param name="robot_description" command="xacro  '$(find pmb2_description)/urdf/arm/arm.urdf.xacro'"/>
+
+</launch>
