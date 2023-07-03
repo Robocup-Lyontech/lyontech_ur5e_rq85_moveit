@@ -19,5 +19,5 @@
   -->
   <xacro:include filename="$(find robotiq_2f_85_gripper_visualization)/urdf/robotiq_arg2f_85_model.xacro"/>
   <xacro:include filename="$(find ur_description)/urdf/inc/ur5e_macro.xacro"/>
-  <xacro:ur5e_robot prefix="" />
+  <xacro:ur5e_robot prefix="ur5e_" />
 </robot>

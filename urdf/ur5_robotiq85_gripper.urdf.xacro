@@ -1,17 +1,16 @@
 <?xml version="1.0"?>
-<robot name="ur5e_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+<robot name="ur5e_rq85_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
 
   <!-- source aide : https://roboticscasual.com/ros-tutorial-how-to-create-a-moveit-config-for-the-ur5-and-a-gripper/ -->
   
   <!-- <xacro:include filename="$(find ur_description)/urdf/inc/ur5e_macro.xacro"/> -->
-  <xacro:include filename="$(find ur_description)/urdf/ur5e.xacro"/>
 
-
-
+  <xacro:include filename="$(find ur_description)/urdf/inc/ur5e_macro.xacro" />
 
 
   <xacro:include filename="$(find robotiq_description)/urdf/robotiq_85_gripper.urdf.xacro" />
+  <xacro:ur5e_robot prefix="ur5e_" />
 
   <!-- <xacro:include filename="$(find robotiq_2f_85_gripper_visualization)/urdf/robotiq_arg2f_85_model.xacro" /> -->
   
@@ -41,15 +40,16 @@
   <link name="mid_tips_link">
   </link>  
 
+ 
   <joint name="robotiq_coupler_joint" type="fixed">
     <origin xyz="0 0 0.004" rpy="0 0 ${-pi/2.0}" />
-    <parent link="tool0"/>
+    <parent link="ur5e_tool0"/>
     <child link="robotiq_coupler"/>
   </joint>
 
   <joint name="robotiq_mid_tip_joint" type="fixed">
     <origin xyz="0 0 0.15" rpy="0 0 0" />
-    <parent link="tool0"/>
+    <parent link="ur5e_tool0"/>
     <child link="mid_tips_link"/>
   </joint>
 
