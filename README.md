@@ -3,7 +3,7 @@
 ### On ROS Computer
 - Follow install instructions : https://github.com/UniversalRobots/Universal_Robots_ROS_Driver
 - Install https://github.com/ros-industrial/robotiq
-- Install https://github.com/filesmuggler/robotiq.git
+- Install https://github.com/filesmuggler/robotiq.git as robotiq_des
 
 ### On Communication Interface (UR Tablet)
 install `external_control` URCap
